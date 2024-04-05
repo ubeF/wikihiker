@@ -1,3 +1,8 @@
-import { getTitle } from "./lib/search.js";
+import { Page } from "./lib/parse.js";
 
-getTitle("https://de.wikipedia.org/wiki/Katzen").then((title) => console.log(title));
+const page = new Page(new URL("https://de.wikipedia.org/wiki/Katzen"));
+await page.load();
+console.log(page.title);
+const references = page.getReferences();
+await Promise.all(references.map((x) => x.load()))
+references.forEach((x) => console.log(x.title));
