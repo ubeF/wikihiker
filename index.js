@@ -1,8 +1,15 @@
-import { Page } from "./lib/parse.js";
+function getUserInput() {
+  if (process.argv.length === 4) {
+    const startUrl = process.argv[2];
+    const targetUrl = process.argv[3];
+    console.log(`Start URL: ${startUrl}`);
+    console.log(`Target URL: ${targetUrl}`);
+  } else {
+    console.log(
+      "Invalid usuage.\n Right usage: node index.js <start-url> <target-url>"
+    );
+    process.exit(1);
+  }
+}
 
-const page = new Page(new URL("https://de.wikipedia.org/wiki/Katzen"));
-await page.load();
-console.log(page.title);
-const references = page.getReferences();
-await Promise.all(references.map((x) => x.load()))
-references.forEach((x) => console.log(x.title));
+getUserInput();
