@@ -1,21 +1,54 @@
 import { search } from "./lib/hiker.js";
+import { program } from "commander/esm.mjs";
 
-async function main() {
-  if (process.argv.length === 4) {
-    const startUrl = process.argv[2];
-    const targetUrl = process.argv[3];
-    console.log(`Start URL: ${startUrl}`);
-    console.log(`Target URL: ${targetUrl}`);
-    let result = await search(new URL(startUrl), new URL(targetUrl), 3);
-    if (result === undefined) {
-      console.log("No connection found");
-    } else {
-      result.printTrace();
+program
+  .name("wikihiker")
+  .description(
+    "A web crawler for wikipedia, finding paths between two articles."
+  )
+  .version("0.2.0");
+
+program
+  .argument("<startURL>", "starting URL")
+  .argument("<targetURL>", "target URL")
+  .option("-d, --depth <number>", "search depth", 3)
+  .option("-v, --verbose", "verbose output")
+  .option("-s, --shortest", "find the shortest path")
+  .option("-f, --first", "find the first path")
+  .action(async (startURL, targetURL, options) => {
+    try {
+      const start = new URL(startURL);
+      const target = new URL(targetURL);
+
+      if (options.shortest && options.first) {
+        console.error(
+          "Error: The options --shortest and --first are mutually exclusive. Please use only one."
+        );
+        process.exit(1);
+      }
+
+      if (options.verbose) {
+        console.log("Start URL:", startURL);
+        console.log("Target URL:", targetURL);
+        console.log("Depth:", options.depth);
+      }
+
+      const res = await search(
+        start,
+        target,
+        options.depth,
+        options.verbose,
+        options.shortest
+      );
+
+      if (res != undefined) {
+        res.printTrace();
+      } else {
+        console.log("No path found");
+      }
+    } catch (error) {
+      console.error("Invalid URL provided:", error.message);
     }
-  } else {
-    console.log("Invalid usuage.\n Right usage: node index.js <start-url> <target-url>");
-    process.exit(1);
-  }
-}
-
-await main();
+  })
+  .showHelpAfterError("(add --help or -h for additional information)")
+  .parse();
