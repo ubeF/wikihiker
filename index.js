@@ -1,5 +1,5 @@
-import { search } from "./lib/hiker.js";
-import { program } from "commander/esm.mjs";
+const { search } = require("./lib/hiker.js");
+const { program } = require("commander");
 
 program
   .name("wikihiker")
