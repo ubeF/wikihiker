@@ -1,5 +1,6 @@
 const { search } = require("./lib/hiker.js");
 const { program } = require("commander");
+const { Database } = require("./database.js");
 
 program
   .name("wikihiker")
@@ -52,3 +53,9 @@ program
   })
   .showHelpAfterError("(add --help or -h for additional information)")
   .parse();
+
+function conditionalLog(msg, cond) {
+  if (cond) {
+    console.log(msg);
+  }
+}
