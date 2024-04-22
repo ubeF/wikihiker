@@ -56,7 +56,5 @@ test("Can find route", async () => {
 
     let result = await db.getRoute("A", "C");
 
-    console.log(result);
-
     expect(result).toEqual(["A", "B", "C"]);
 })
