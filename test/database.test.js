@@ -48,3 +48,15 @@ test("Can set to expanded", async () => {
     let after = await db.getPages(0, 16);
     expect(after.length).toEqual(0);
 })
+
+test("Can find route", async () => {
+    await db.prepare("A");
+    await db.addReference("A", "B", 1);
+    await db.addReference("B", "C", 2);
+
+    let result = await db.getRoute("A", "C");
+
+    console.log(result);
+
+    expect(result).toEqual(["A", "B", "C"]);
+})
