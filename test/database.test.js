@@ -24,7 +24,7 @@ test("Can prepare database", async () => {
 
     let after = await db.getPages(0, 16);
     expect(after.length).toEqual(1);
-    expect(after[0].get("url")).toEqual("testURL");
+    expect(after[0]).toEqual("testURL");
 })
 
 test("Can add reference", async () => {
