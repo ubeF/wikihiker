@@ -1,5 +1,6 @@
-import { search } from "./lib/hiker.js";
-import { program } from "commander/esm.mjs";
+const { search } = require("./lib/hiker.js");
+const { program } = require("commander");
+const { Database } = require("./lib/database.js");
 
 program
   .name("wikihiker")
@@ -12,42 +13,58 @@ program
   .argument("<startURL>", "starting URL")
   .argument("<targetURL>", "target URL")
   .option("-d, --depth <number>", "search depth", 3)
-  .option("-v, --verbose", "verbose output")
-  .option("-s, --shortest", "find the shortest path")
-  .option("-f, --first", "find the first path")
+  .option("-v, --verbosity <number>", "verbosity level", 1)
+  .option(
+    "-g, --graph database <path>",
+    "database path",
+    "neo4j://localhost:7687"
+  )
+  .option("-u, --username <username>", "username", null)
+  .option("-p, --password <password>", "password", null)
   .action(async (startURL, targetURL, options) => {
+    const depth = options.depth;
+    const graph = options.graph;
+    const username = options.username;
+    const password = options.password;
+    const verbosity = options.verbosity;
+    let database;
+    let res;
+
+    if ((password && !username) || (username && !password)) {
+      console.error("Username and password must be provided together\n ");
+      process.exit(0);
+    }
+
+    if (options.verbosity > 0) {
+      if (graph) {
+        console.log("Graph database:", graph);
+      }
+      console.log("Start URL:", startURL);
+      console.log("Target URL:", targetURL);
+      console.log("Depth:", options.depth);
+    }
+
     try {
-      const start = new URL(startURL);
-      const target = new URL(targetURL);
-
-      if (options.shortest && options.first) {
-        console.error(
-          "Error: The options --shortest and --first are mutually exclusive. Please use only one."
-        );
-        process.exit(1);
-      }
-
-      if (options.verbose) {
-        console.log("Start URL:", startURL);
-        console.log("Target URL:", targetURL);
-        console.log("Depth:", options.depth);
-      }
-
-      const res = await search(
-        start,
-        target,
-        options.depth,
-        options.verbose,
-        options.shortest
-      );
-
-      if (res != undefined) {
-        res.printTrace();
-      } else {
-        console.log("No path found");
-      }
+      database = new Database(graph, username, password);
+      await database.connect();
     } catch (error) {
-      console.error("Invalid URL provided:", error.message);
+      console.error("Failed to connect to database:", error.message);
+      process.exit(0);
+    }
+
+    try {
+      res = await search(startURL, targetURL, depth, database, verbosity);
+    } catch (error) {
+      console.error("Failed to search:", error.message);
+      process.exit(0);
+    }
+
+    if (res != undefined) {
+      console.log("Path found:");
+      res.forEach((x) => console.log(x));
+      await database.disconnect();
+    } else {
+      console.log("No path found");
     }
   })
   .showHelpAfterError("(add --help or -h for additional information)")
