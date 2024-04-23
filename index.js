@@ -1,6 +1,6 @@
 const { search } = require("./lib/hiker.js");
 const { program } = require("commander");
-const { Database } = require("./database.js");
+const { Database } = require("./lib/database.js");
 
 program
   .name("wikihiker")
@@ -14,19 +14,19 @@ program
   .argument("<targetURL>", "target URL")
   .option("-d, --depth <number>", "search depth", 3)
   .option("-v, --verbose", "verbose output")
-  .option("-s, --shortest", "find the shortest path")
-  .option("-f, --first", "find the first path")
+  .option(
+    "-g, --graph database <path>",
+    "database path",
+    "neo4j://localhost:7687"
+  )
+  .option("-u, --username <username>", "username", null)
+  .option("-p, --password <password>", "password", null)
   .action(async (startURL, targetURL, options) => {
     try {
-      const start = new URL(startURL);
-      const target = new URL(targetURL);
-
-      if (options.shortest && options.first) {
-        console.error(
-          "Error: The options --shortest and --first are mutually exclusive. Please use only one."
-        );
-        process.exit(1);
-      }
+      const depth = options.depth;
+      const graph = options.graph;
+      const username = options.username;
+      const password = options.password;
 
       if (options.verbose) {
         console.log("Start URL:", startURL);
@@ -34,16 +34,31 @@ program
         console.log("Depth:", options.depth);
       }
 
+      if (graph) {
+        console.log("Graph database:", graph);
+        console.log("Username:", username);
+        console.log("Password:", password);
+
+        try {
+          const database = new Database(graph, username, password);
+          await database.connect();
+        } catch (error) {
+          console.error("Failed to connect to database:", error.message);
+          process.exit(0);
+        }
+      }
+
       const res = await search(
-        start,
-        target,
-        options.depth,
+        startURL,
+        targetURL,
+        depth,
         options.verbose,
-        options.shortest
+        database
       );
 
       if (res != undefined) {
         res.printTrace();
+        await database.disconnect();
       } else {
         console.log("No path found");
       }
