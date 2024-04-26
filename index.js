@@ -23,7 +23,7 @@ async function connectDatabase(graph, username, password) {
 program
   .name("wikihiker")
   .description(
-    "A web crawler for wikipedia, finding paths between two articles."
+    "A web crawler for Wikipedia, finding paths between two articles."
   )
   .version("0.2.0");
 
@@ -46,7 +46,14 @@ program
     const username = options.username;
     const password = options.password;
     const verbosity = options.verbosity;
+    let searchedPages;
     let res;
+
+    database = await connectDatabase(graph, username, password);
+
+    if (!database) {
+      process.exit(0);
+    }
 
     if (options.verbosity > 0) {
       if (graph) {
@@ -55,24 +62,23 @@ program
       console.log("Start URL:", startURL);
       console.log("Target URL:", targetURL);
       console.log("Depth:", options.depth);
-    }
-
-    database = await connectDatabase(graph, username, password);
-
-    if (!database) {
-      process.exit(0);
+      console.log("\n");
     }
 
     try {
       res = await search(startURL, targetURL, depth, database, verbosity);
+      searchedPages = await database.getNumSearchedPages();
     } catch (error) {
       console.error("Failed to search:", error.message);
       process.exit(0);
     }
 
     if (res != undefined) {
+      console.log("\n");
       console.log("Path found:");
       res.forEach((x) => console.log(x));
+      console.log("\n");
+      console.log("Searched pages:", searchedPages);
       await database.disconnect();
     } else {
       console.log("No path found");
