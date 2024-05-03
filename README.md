@@ -24,7 +24,7 @@
 
 ## Authors
 
-Felix Burkard
+Felix Burkard\
 Mykhaylo Serdyuk
 
 ## License
