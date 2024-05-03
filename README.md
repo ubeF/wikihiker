@@ -2,7 +2,7 @@
 
 ## Description
 
-"Wikihiker" is a webcraler that finds the fastest route between two Wikipedia pages.
+"Wikihiker" is a webcrawler that finds the fastest route between two Wikipedia pages.
 
 ## Getting Started
 
