@@ -1,7 +1,6 @@
 const { search } = require("./lib/hiker.js");
 const { program } = require("commander");
 const { Database } = require("./lib/database.js");
-const cliProgress = require("cli-progress");
 
 let database;
 
@@ -120,14 +119,4 @@ program
 
 program.parse(process.argv);
 
-function ProgressBar() {
 
-  let end;
-  let currentcount;
-
-  const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-  bar.start(end, 0);
-
-  const timer = set
-
-}
