@@ -1,8 +1,10 @@
 const { search } = require("./lib/hiker.js");
 const { program } = require("commander");
 const { Database } = require("./lib/database.js");
+const { Progress } = require("./lib/progress.js");
 
 let database;
+let progress;
 
 async function connectDatabase(graph, username, password) {
   if ((password && !username) || (username && !password)) {
@@ -11,6 +13,7 @@ async function connectDatabase(graph, username, password) {
   }
 
   try {
+    progress = new Progress();
     database = new Database(graph, username, password);
     await database.connect();
     return database;
@@ -66,7 +69,7 @@ program
     }
 
     try {
-      res = await search(startURL, targetURL, depth, database, verbosity);
+      res = await search(startURL, targetURL, depth, database, verbosity, progress);
       searchedPages = await database.getNumSearchedPages();
     } catch (error) {
       console.error("Failed to search:", error.message);
@@ -83,6 +86,8 @@ program
     } else {
       console.log("No path found");
     }
+
+    process.exit(0);
   })
   .showHelpAfterError("(add --help or -h for additional information)");
 
@@ -118,3 +123,5 @@ program
   .showHelpAfterError("(add --help or -h for additional information)");
 
 program.parse(process.argv);
+
+
