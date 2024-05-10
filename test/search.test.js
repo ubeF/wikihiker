@@ -35,12 +35,12 @@ test("Can search level", async () => {
   const calls = options.addConnectionsLevel.mock.calls.map((call) => call[0]);
   expect(calls).toEqual([
     [
-      { node: "A", children: ["A1", "A2"] },
-      { node: "B", children: ["B1", "B2"] },
+      { src: "A", refs: ["A1", "A2"] },
+      { src: "B", refs: ["B1", "B2"] },
     ],
     [
-      { node: "C", children: ["C1", "C2"] },
-      { node: "D", children: ["D1", "D2"] },
+      { src: "C", refs: ["C1", "C2"] },
+      { src: "D", refs: ["D1", "D2"] },
     ],
   ]);
 });

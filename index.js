@@ -1,19 +1,16 @@
-const { search } = require("./lib/search.js");
+const { Hiker } = require("./lib/hiker.js");
 const { program } = require("commander");
-const { Database } = require("./lib/database.js");
 
-let database;
-
-async function connectDatabase(graph, username, password) {
+async function createHiker(graph, username, password) {
   if ((password && !username) || (username && !password)) {
     console.error("Username and password must be provided together\n ");
     process.exit(0);
   }
 
   try {
-    database = new Database(graph, username, password);
-    await database.connect();
-    return database;
+    const hiker = new Hiker();
+    await hiker.connect(graph, username, password);
+    return hiker;
   } catch (error) {
     console.error("Failed to connect to database:", error.message);
     return undefined;
@@ -49,9 +46,9 @@ program
     let searchedPages;
     let res;
 
-    database = await connectDatabase(graph, username, password);
+    const hiker = await createHiker(graph, username, password);
 
-    if (!database) {
+    if (!hiker) {
       process.exit(0);
     }
 
@@ -66,8 +63,8 @@ program
     }
 
     try {
-      res = await search(startURL, targetURL, depth, database, verbosity);
-      searchedPages = await database.getNumSearchedPages();
+      res = await hiker.hike(startURL, targetURL, depth);
+      searchedPages = await hiker.getDistanceTraveled();
     } catch (error) {
       console.error("Failed to search:", error.message);
       process.exit(0);
@@ -79,7 +76,7 @@ program
       res.forEach((x) => console.log(x));
       console.log("\n");
       console.log("Searched pages:", searchedPages);
-      await database.disconnect();
+      await hiker.disconnect();
     } else {
       console.log("No path found");
     }
@@ -100,20 +97,20 @@ program
     const password = options.password;
     const graph = options.graph;
 
-    database = await connectDatabase(graph, username, password);
+    const hiker = await createHiker(graph, username, password);
 
-    if (!database) {
+    if (!hiker) {
       process.exit(0);
     }
 
     try {
-      console.log("Deleted nodes:", await database.clearData());
+      console.log("Deleted nodes:", await hiker.forget());
     } catch (error) {
       console.error("Failed to clear database:", error.message);
       process.exit(0);
     }
 
-    await database.disconnect();
+    await hiker.disconnect();
   })
   .showHelpAfterError("(add --help or -h for additional information)");
 
