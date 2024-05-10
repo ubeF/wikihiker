@@ -22,6 +22,7 @@ test("Can search level", async () => {
           return ["D1", "D2"];
       }
     }),
+    tickBar: jest.fn()
   };
 
   await searchLevel(options);
