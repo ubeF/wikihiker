@@ -1,7 +1,7 @@
 {
   "name": "wikihiker",
   "version": "1.0.0",
-  "description": "",
+  "description": "A web crawler that finds the fastest route between two Wikipedia pages.",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/jest",
