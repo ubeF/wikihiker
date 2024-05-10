@@ -1,4 +1,4 @@
-const { search } = require("./lib/hiker.js");
+const { search } = require("./lib/search.js");
 const { program } = require("commander");
 const { Database } = require("./lib/database.js");
 
