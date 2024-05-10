@@ -8,7 +8,7 @@
 
 ### Dependencies
 
-Node.js
+[Node.js](https://nodejs.org/en) minimum v.18\
 [Cheerio](https://cheerio.js.org/) for HTML parsing\
 [Neo4j](https://neo4j.com/) for the GraphDatabase\
 [Commander.js](https://github.com/tj/commander.js) for the CLI\
