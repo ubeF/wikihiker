@@ -21,4 +21,4 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Run tests
-      run: npm test -- test/hiker.test.js
+      run: npm test -- test/search.test.js
