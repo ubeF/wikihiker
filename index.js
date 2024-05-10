@@ -80,6 +80,8 @@ program
     } else {
       console.log("No path found");
     }
+
+    process.exit(0);
   })
   .showHelpAfterError("(add --help or -h for additional information)");
 
@@ -115,3 +117,5 @@ program
   .showHelpAfterError("(add --help or -h for additional information)");
 
 program.parse(process.argv);
+
+
