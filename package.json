@@ -1,12 +1,11 @@
 {
   "name": "wikihiker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A web crawler that finds the fastest route between two Wikipedia pages.",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/jest",
-    "start": "node index.js",
-    "database": "sudo docker compose up"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +25,8 @@
   },
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "bin": {
+    "wikihiker": "index.js"
   }
 }

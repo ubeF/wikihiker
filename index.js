@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { Hiker } = require("./lib/hiker.js");
 const { program } = require("commander");
 
@@ -117,5 +119,4 @@ program
   .showHelpAfterError("(add --help or -h for additional information)");
 
 program.parse(process.argv);
-
 
