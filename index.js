@@ -24,7 +24,7 @@ program
   .description(
     "A web crawler for Wikipedia, finding paths between two articles."
   )
-  .version("0.2.0");
+  .version("1.0.2");
 
 program
   .command("search")
