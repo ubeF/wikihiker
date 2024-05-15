@@ -1,6 +1,6 @@
 {
   "name": "wikihiker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A web crawler that finds the fastest route between two Wikipedia pages.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/ubeF/wikihiker.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/ubeF/wikihiker/issues"
   },
